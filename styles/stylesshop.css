@@ -1,0 +1,356 @@
+/* ==================================== */
+/* 1. Global Reset en Variabelen */
+/* ==================================== */
+:root {
+    --primary-color: #1a1a1a; /* Donkere tekst */
+    --secondary-color: #666;  /* Grijze tekst */
+    --accent-color: #cccccc; /* Lichte grens/lijn */
+    --background-light: #f7f7f7;
+    --spacing-unit: 1.5rem;   /* Standaard padding/marge */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--primary-color);
+    line-height: 1.5;
+    background-color: white;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+h1, h2, h3 {
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+/* ==================================== */
+/* 2. Header en Navigatie */
+/* ==================================== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-unit);
+    border-bottom: 1px solid var(--accent-color);
+    background-color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 60px;
+}
+
+/* Logo H1 */
+header h1 img {
+    height: 40px; /* Vaste hoogte voor logo */
+    vertical-align: middle;
+}
+
+/* Utiliteiten Sectie */
+header > section {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+header button, header a[href="/cart"] { /* Selecteer de Zoekknop en Winkelwagen */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem; /* Zorg voor zichtbaarheid */
+}
+
+/* Hoofdnavigatie (voor mobiel: verborgen) */
+header nav {
+    display: none; 
+}
+
+/* Desktop navigatie (simpele weergave) */
+@media (min-width: 768px) {
+    header nav {
+        display: block; /* Toon navigatie op desktop */
+        flex-grow: 1; /* Neemt ruimte in tussen logo en utiliteiten */
+        text-align: center;
+    }
+    header nav > ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+    header nav ul ul { /* Subnavigatie (dropdowns) verbergen op desktop voor basisopzet */
+        display: none; 
+    }
+}
+
+/* ==================================== */
+/* 3. Main Content - Collectie Pagina */
+/* ==================================== */
+main {
+    padding: var(--spacing-unit);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Breadcrumb Navigatie */
+main > nav {
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+main > nav ol {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+}
+main > nav li::after {
+    content: '/';
+    margin-left: 0.5rem;
+    color: var(--accent-color);
+}
+main > nav li:last-child::after {
+    content: none;
+}
+
+/* Collectie Titel Sectie */
+main > section:first-of-type {
+    padding: 2rem 0;
+    text-align: center;
+    border-bottom: 1px solid var(--accent-color);
+    margin-bottom: var(--spacing-unit);
+}
+main > section:first-of-type h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+main > section:first-of-type p {
+    color: var(--secondary-color);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Filters en Sortering (ASIDE) */
+aside {
+    padding: 1rem 0;
+    margin-bottom: var(--spacing-unit);
+    border-bottom: 1px solid var(--accent-color);
+}
+aside h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+aside fieldset {
+    border: none;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+aside legend {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* ==================================== */
+/* 4. Product Lijst (Grid) */
+/* ==================================== */
+
+/* De sectie die de UL bevat (Productlijst) */
+main > section:nth-of-type(2) { 
+    padding-bottom: var(--spacing-unit);
+}
+
+main > section:nth-of-type(2) > ul {
+    list-style: none;
+    display: grid;
+    /* Mobiel: 2 kolommen */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+    gap: var(--spacing-unit);
+}
+
+/* Individueel Product (ARTICLE binnen LI) */
+main > section:nth-of-type(2) article {
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    overflow: hidden;
+    text-align: center;
+}
+
+main > section:nth-of-type(2) article a {
+    display: block;
+    padding-bottom: 1rem;
+}
+
+main figure {
+    margin-bottom: 0.5rem;
+}
+main img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+main h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+    padding: 0 0.5rem;
+}
+main p data {
+    font-weight: 700;
+}
+main p del {
+    color: var(--secondary-color);
+    margin-left: 0.5rem;
+    font-size: 0.9em;
+}
+
+main article button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+
+/* Paginering Navigatie */
+main > section:nth-of-type(2) > nav {
+    padding: 2rem 0;
+    text-align: center;
+}
+main > section:nth-of-type(2) > nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+main > section:nth-of-type(2) > nav a {
+    display: block;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+}
+main > section:nth-of-type(2) > nav a:hover {
+    background-color: var(--background-light);
+}
+
+
+/* ==================================== */
+/* 5. Footer */
+/* ==================================== */
+footer {
+    background-color: var(--background-light);
+    padding: 2rem var(--spacing-unit);
+    border-top: 1px solid var(--accent-color);
+    color: var(--secondary-color);
+}
+
+footer > section, footer > nav {
+    margin-bottom: 2rem;
+}
+
+footer h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+/* Footer Navigatie (Details/Summary) */
+footer nav details summary {
+    font-weight: 600;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--accent-color);
+    cursor: pointer;
+}
+footer nav ul {
+    list-style: none;
+    padding: 0.5rem 0 1rem 0;
+}
+
+/* Footer Formulier */
+footer form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+footer form input[type="email"] {
+    padding: 0.5rem;
+    border: 1px solid var(--accent-color);
+}
+footer form button {
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Copyright */
+footer > section:last-of-type p {
+    text-align: center;
+    font-size: 0.8rem;
+    margin-top: 2rem;
+}
+
+
+/* Desktop aanpassingen voor lay-out */
+@media (min-width: 768px) {
+    /* Hoofdgedeelte op desktop: filters naast producten */
+    main {
+        display: grid;
+        grid-template-columns: 200px 1fr; /* Filters 200px breed, de rest voor producten */
+        gap: 3rem;
+    }
+    
+    /* Filters aside verplaatsen */
+    aside {
+        order: 1; /* Zorg ervoor dat de aside voor de productsectie komt */
+        border-bottom: none;
+    }
+    
+    /* Product Lijst Sectie */
+    main > section:nth-of-type(2) {
+        order: 2;
+    }
+    
+    /* Collectie Titel (terug naar normale flow, over 2 kolommen) */
+    main > section:first-of-type {
+        grid-column: 1 / -1; /* Zorg dat de titel de volledige breedte inneemt */
+        text-align: left;
+    }
+    main > section:first-of-type p {
+        margin: 0;
+    }
+    
+    /* Product Grid op desktop: 3 of 4 kolommen */
+    main > section:nth-of-type(2) > ul {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    }
+
+    /* Footer aanpassingen voor meerdere kolommen */
+    footer {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+    footer > section:nth-of-type(1) { /* TØTE Intro tekst */
+        grid-column: span 2; 
+    }
+    footer > section:last-of-type { /* Copyright */
+        grid-column: 1 / -1;
+    }
+    footer nav details {
+        border-bottom: none;
+    }
+}
