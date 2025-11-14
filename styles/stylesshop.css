@@ -1,356 +1,816 @@
-/* ==================================== */
-/* 1. Global Reset en Variabelen */
-/* ==================================== */
+/* ---------------------------------------------------- */
+/* 1. GLOBALE STIJLEN & KLEUR VARIABELEN (STANDAARD IS LIGHT MODE) */
+/* ---------------------------------------------------- */
 :root {
-    --primary-color: #1a1a1a; /* Donkere tekst */
-    --secondary-color: #666;  /* Grijze tekst */
-    --accent-color: #cccccc; /* Lichte grens/lijn */
-    --background-light: #f7f7f7;
-    --spacing-unit: 1.5rem;   /* Standaard padding/marge */
+color-scheme:light dark;
+
+    /* Basistekst & Achtergrond */
+    --color-text-primary: light-dark(#1a1a1a, #f2f2f2);        /* Standaard zwarte tekst */
+    --color-text-secondary: #666;         /* Grijs voor subtiele tekst */
+    --color-text-accent: #205f71;         /* Kleur voor speciale links (derde tekstkleur) */
+    --color-bg-primary: #f7f7f7;          /* Standaard lichtgrijze achtergrond van de pagina */
+    --color-bg-secondary: #ffffff;        /* Wit (gebruikt voor header scrolled/mobile menu) */
+    --color-bg-tertiary: #efefef;         /* Lichtere achtergrond (gebruikt voor footer) */
+    
+    /* Randen & Accenten */
+    --color-border: #cccccc;              /* Grijze randen */
+    --color-accent: #cccccc;              /* Grijze accenten (buttons hover, randen) */
+    --color-link-default: var(--color-text-primary);
+    --color-link-hover: var(--color-text-secondary);
+    
+    /* Speciale kleuren */
+    --color-badge-bg: #024053;
+    --color-badge-text: white;
+    
+    /* Hero/Button kleuren */
+    --color-hero-button-bg: white;
+    --color-hero-button-text: var(--color-text-primary);
+
+    /* Overige Stijlen */
+    --transition-speed: 0.3s;
+    --nav-bar-height: 60px;
+    --side-padding: 1.5rem; 
+    --font-family-base: 'Instrument sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-size-base: 1rem;       
+    --font-size-sm: 0.875rem;    
+    --font-size-lg: 1.25rem;     
+    --font-size-h2-mobile: 1.725rem;
+    --font-size-h2-desktop: 2.5rem;
+
+    --menu-button-color:light-dark(white, white);
+    --menu-button-color-open:light-dark(black, white);
 }
+    
+/* ---------------------------------------------------- */
+/* 2. DARK MODE OVERHEERSING */
+/* ---------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* --color-text-primary: #f2f2f2;     */
+            
+        --color-text-secondary: #aaaaaa;      
+        --color-text-accent: #86c4d7;         
+        --color-bg-primary: #1c1c1c;          
+        --color-bg-secondary: #000000;        
+        --color-bg-tertiary: #2a2a2a;         
+        --color-border: #333333;              
+        --color-accent: #444444;              
+        --color-badge-bg: #3f7b90;
+        --color-badge-text: white;
+        --color-hero-button-bg: var(--color-bg-primary);
+        --color-hero-button-text: var(--color-text-primary);
+    }
+    
+    /* Standaard Dark Mode header (niet-gescrolld) moet wit zijn op zwart */
+    header {
+        color: var(--color-text-primary); 
+    }
+
+    /* Zorgt ervoor dat tekst in het ZWARTE mobiele menu WIT (primary text) is */
+    header.menu-open nav ul li a {
+        color: var(--color-text-primary) !important; 
+    }
+    
+    /* Zorg dat de hamburger/kruisje knop WIT is in de standaard Dark Mode toestand */
+    [aria-controls="main-navigation"] {
+        color: var(--color-text-primary) !important; 
+    }
+}
+
+/* ---------------------------------------------------- */
+/* 3. ACCESSIBILITY: PREFERS-REDUCED-MOTION */
+/* ---------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001s !important;
+        transition-property: all !important;
+        animation-duration: 0.001s !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important; 
+        animation: none !important;
+        transition: none !important; 
+    }
+    
+    header nav ul, 
+    header nav li a[aria-haspopup="true"]::after,
+    header nav ul li ul {
+        transition: none !important;
+        transform: none !important;
+    }
+
+}
+    
+/* ---------------------------------------------------- */
+/* 4. BASE STYLES & HEADER (MOBILE FIRST) */
+/* ---------------------------------------------------- */
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    line-height: 1.5;
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    color: var(--primary-color);
-    line-height: 1.5;
-    background-color: white;
+html, body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base); 
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary); 
+    overflow-x: hidden; 
 }
 
 a {
     text-decoration: none;
-    color: var(--primary-color);
+    color: var(--color-link-default);
+    transition: color var(--transition-speed);
 }
 
-h1, h2, h3 {
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
+a:hover {
+    color: var(--color-link-hover);
 }
 
-/* ==================================== */
-/* 2. Header en Navigatie */
-/* ==================================== */
+/* Header Container */
 header {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    background-color: var(--color-bg-secondary); 
+    z-index: 15;
+    padding: 0; 
+    color: white; 
+    border-bottom: none; 
+    
+    display: grid; 
+    grid-template-columns: 1fr auto 1fr; 
+    align-items: center;
+
+    transition: background-color var(--transition-speed) ease-in-out, border-bottom var(--transition-speed), color var(--transition-speed), transform 0.4s ease;
+}
+
+/* Mobile Menu Button (Hamburger) */
+[aria-controls="main-navigation"] {
+    display: flex; 
+    padding: 1rem var(--side-padding); 
+    cursor: pointer;
+    border: none;
+    background: none;
+    line-height: 1;
+    z-index: 25; 
+    justify-self: start; 
+    align-items: center;
+    justify-content: center;
+    
+    /* Standaard in Light Mode is de knop ZWART op witte achtergrond (via JS wordt dit WIT bij scroll 0) */
+    color: var(--color-text-primary); 
+}
+
+/* Hamburger Icon (Default State: Hamburger) */
+[aria-controls="main-navigation"][aria-expanded="false"] {
+    position: relative; 
+    width: 2rem; 
+    height: 2rem; 
+    padding: 0; 
+    font-size: 0; 
+    line-height: 1;
+    display: block; 
+    color:var(--menu-button-color);
+}
+[aria-controls="main-navigation"][aria-expanded="false"]::before,
+[aria-controls="main-navigation"][aria-expanded="false"]::after {
+    content: ''; 
+    display: block;
+    width: 1.4rem; 
+    height: 1.5px; 
+    position: absolute; 
+    background-color: currentColor; 
+    transform: none; 
+}
+[aria-controls="main-navigation"][aria-expanded="false"]::before {
+    top: 0.7rem; 
+    left: 0.8rem; 
+}
+[aria-controls="main-navigation"][aria-expanded="false"]::after {
+    bottom: 0.7rem; 
+    left: 0.8rem; 
+    width: 1.0rem; 
+}
+
+/* KRUISJE STIJL (Menu Open: X met Menu tekst) */
+[aria-controls="main-navigation"][aria-expanded="true"] {
+    position: relative; 
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    padding: 1rem var(--side-padding); 
+    background: none; 
+    border: none; 
+    width: auto; 
+}
+
+[aria-controls="main-navigation"][aria-expanded="true"]::before {
+    content: none;
+    display: none;
+}
+
+[aria-controls="main-navigation"][aria-expanded="true"]::after {
+    content: '✕'; 
+    font-size: 1.5rem; 
+    line-height: 1;
+    /* color: currentColor;  */
+    color:var(--menu-button-color-open);
+    padding: 0;
+    font-weight: 300; 
+    position: relative; 
+    z-index: 2;
+    width: auto; 
+    height: auto; 
+    background-color: transparent; 
+    transform: none;
+    top: auto; 
+    left: auto;
+}
+
+/* Logo Styling */
+header h1 {
+    text-align: center;
+    margin: 0;
+    padding: 1rem 0;
+    line-height: 1;
+    justify-self: center; 
+}
+header h1 a {
+    display: inline-block;
+    font-size: 0; 
+    color: transparent; 
+}
+header h1 img {
+    align-items: center;
+    display: block; 
+    margin: 0 auto;  
+    height: 40px; 
+    width: auto; 
+    object-fit: contain; 
+    filter: none; 
+}
+
+/* Cart Section Styling */
+header svg {
+    color: currentColor; 
+}
+header section:nth-of-type(1) { 
+    padding: 1rem var(--side-padding); 
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    z-index: 25;
+    color: currentColor;
+    justify-self: end; 
+}
+header section:nth-of-type(1) p {
+    display: none;
+}
+header section:nth-of-type(1) a {
+    font-size: 0; 
+    position: relative;
+    color: currentColor; 
+    width: 2rem; 
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mobile Menu Container (Standaard verborgen op mobiel) */
+header nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0; 
+    
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100vh; 
+    
+    padding-top: calc(var(--nav-bar-height) + 1rem); 
+    padding-right: 0; 
+    padding-bottom: 1.5rem; 
+    padding-left: 0; 
+    
+    background-color: var(--color-bg-secondary);
+    
+    /* Forceert gesloten staat (links van het scherm) */
+    transform: translateX(-100%) !important; 
+    
+    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1); 
+    
+    border-right: 1px solid var(--color-accent); 
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); 
+    overflow-y: auto; 
+    z-index: 24; 
+    
+    color: var(--color-text-primary); 
+}
+
+/* Standaard ARIA open state */
+header nav:has([aria-expanded="true"]) ul,
+header.menu-open nav ul {
+    /* Opent het menu wanneer de knop is ingedrukt of de klasse is toegevoegd */
+    transform: translateX(0) !important;
+}
+
+/* Main Link Styling (LI) */
+header nav li {
+    border-bottom: 1px solid var(--color-border);
+}
+header nav li:last-child {
+    border-bottom: none;
+}
+
+/* Main Link Styling (A) */
+header nav li a {
+    display: block;
+    padding: 1rem var(--side-padding); 
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em; 
+    font-size: 1.5rem; 
+    transition: color var(--transition-speed);
+    border-bottom: none; 
+}
+
+
+/* Dropdown Toggle styling (The SHOP link) */
+header nav li a[aria-haspopup="true"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 var(--spacing-unit);
-    border-bottom: 1px solid var(--accent-color);
-    background-color: white;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    height: 60px;
-}
-
-/* Logo H1 */
-header h1 img {
-    height: 40px; /* Vaste hoogte voor logo */
-    vertical-align: middle;
-}
-
-/* Utiliteiten Sectie */
-header > section {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-header button, header a[href="/cart"] { /* Selecteer de Zoekknop en Winkelwagen */
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem; /* Zorg voor zichtbaarheid */
-}
-
-/* Hoofdnavigatie (voor mobiel: verborgen) */
-header nav {
-    display: none; 
-}
-
-/* Desktop navigatie (simpele weergave) */
-@media (min-width: 768px) {
-    header nav {
-        display: block; /* Toon navigatie op desktop */
-        flex-grow: 1; /* Neemt ruimte in tussen logo en utiliteiten */
-        text-align: center;
-    }
-    header nav > ul {
-        list-style: none;
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-    }
-    header nav ul ul { /* Subnavigatie (dropdowns) verbergen op desktop voor basisopzet */
-        display: none; 
-    }
-}
-
-/* ==================================== */
-/* 3. Main Content - Collectie Pagina */
-/* ==================================== */
-main {
-    padding: var(--spacing-unit);
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Breadcrumb Navigatie */
-main > nav {
-    padding: 1rem 0;
-    font-size: 0.9rem;
-    color: var(--secondary-color);
-}
-main > nav ol {
-    list-style: none;
-    display: flex;
-    gap: 0.5rem;
-}
-main > nav li::after {
-    content: '/';
-    margin-left: 0.5rem;
-    color: var(--accent-color);
-}
-main > nav li:last-child::after {
-    content: none;
-}
-
-/* Collectie Titel Sectie */
-main > section:first-of-type {
-    padding: 2rem 0;
-    text-align: center;
-    border-bottom: 1px solid var(--accent-color);
-    margin-bottom: var(--spacing-unit);
-}
-main > section:first-of-type h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-main > section:first-of-type p {
-    color: var(--secondary-color);
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Filters en Sortering (ASIDE) */
-aside {
-    padding: 1rem 0;
-    margin-bottom: var(--spacing-unit);
-    border-bottom: 1px solid var(--accent-color);
-}
-aside h2 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
-aside fieldset {
-    border: none;
-    padding: 0;
-    margin-bottom: 1rem;
-}
-aside legend {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-/* ==================================== */
-/* 4. Product Lijst (Grid) */
-/* ==================================== */
-
-/* De sectie die de UL bevat (Productlijst) */
-main > section:nth-of-type(2) { 
-    padding-bottom: var(--spacing-unit);
-}
-
-main > section:nth-of-type(2) > ul {
-    list-style: none;
-    display: grid;
-    /* Mobiel: 2 kolommen */
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
-    gap: var(--spacing-unit);
-}
-
-/* Individueel Product (ARTICLE binnen LI) */
-main > section:nth-of-type(2) article {
-    border: 1px solid var(--accent-color);
-    border-radius: 4px;
-    overflow: hidden;
-    text-align: center;
-}
-
-main > section:nth-of-type(2) article a {
-    display: block;
-    padding-bottom: 1rem;
-}
-
-main figure {
-    margin-bottom: 0.5rem;
-}
-main img {
     width: 100%;
+}
+
+/* Arrow for SHOP link */
+header nav li a[aria-haspopup="true"]::after {
+    content: '▾';
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: transform 0.4s; 
+    font-weight: 400;
+}
+/* Pijlrotatie wanneer dropdown open is (door JS/aria-expanded) */
+header nav li a[aria-haspopup="true"][aria-expanded="true"]::after {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu (Nested list) specific styling */
+header nav ul li ul { 
+    list-style: none;
+    position: static; 
+    width: auto;
     height: auto;
+    
+    padding: 0;
+    margin-top: 0;
+    max-height: 0; 
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out;
+    background-color: transparent; 
+    transform: none; 
+    z-index: auto;
+    border-right: none;
+    box-shadow: none;
+    border-bottom: none; 
+}
+
+/* Dropdown sub-link styling */
+header nav ul li ul li a {
+    padding: 0.75rem var(--side-padding) 0.75rem calc(var(--side-padding) + 1.5rem); 
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: var(--color-text-primary); 
+}
+header nav ul li ul li {
+    border-bottom: none;
+}
+
+/* Hero Section */
+main section:first-of-type {
+    position: relative; 
+    min-height: 70vh;
     display: block;
+    padding: 0; 
+    overflow: hidden;
+    margin-top: 0; 
+    border-bottom: none;
 }
 
-main h3 {
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 0.2rem;
-    padding: 0 0.5rem;
-}
-main p data {
-    font-weight: 700;
-}
-main p del {
-    color: var(--secondary-color);
-    margin-left: 0.5rem;
-    font-size: 0.9em;
-}
-
-main article button {
+main section:first-of-type picture,
+main section:first-of-type img {
     width: 100%;
-    padding: 0.75rem;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-
-/* Paginering Navigatie */
-main > section:nth-of-type(2) > nav {
-    padding: 2rem 0;
-    text-align: center;
-}
-main > section:nth-of-type(2) > nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 0.75rem;
-}
-main > section:nth-of-type(2) > nav a {
+    height: 70vh;
+    object-fit: cover;
     display: block;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--accent-color);
+    margin-bottom: 0;
+}
+
+/* AANGEPAST: Overlay van BOVENAF */
+main section:first-of-type::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%); /* Van boven naar beneden */
+    z-index: 5; 
+}
+
+main section:first-of-type > h2, 
+main section:first-of-type > p, 
+main section:first-of-type > a {
+    position: absolute;
+    left: 8%; 
+    width: 84%; 
+    color: white;
+    z-index: 10; 
+    margin: 0;
+    text-align: left;
+    max-width: 600px;
+}
+
+/* AANGEPAST: Knop nu vanaf BOVEN gepositioneerd */
+main section:first-of-type > a {
+    top: 13rem; /* Eerder: bottom: 4rem */
+    display: inline-block; 
+    width: auto;
+    min-width: 200px;
+    padding: 1rem 2rem;
+    background-color: var(--color-hero-button-bg);
+    color: var(--color-hero-button-text); 
     border-radius: 4px;
-}
-main > section:nth-of-type(2) > nav a:hover {
-    background-color: var(--background-light);
-}
-
-
-/* ==================================== */
-/* 5. Footer */
-/* ==================================== */
-footer {
-    background-color: var(--background-light);
-    padding: 2rem var(--spacing-unit);
-    border-top: 1px solid var(--accent-color);
-    color: var(--secondary-color);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-align: center;
+    transition: background-color var(--transition-speed);
 }
 
-footer > section, footer > nav {
+main section:first-of-type > a:hover {
+    background-color: var(--color-accent); 
+}
+
+/* AANGEPAST: Paragraaf nu vanaf BOVEN gepositioneerd */
+main section:first-of-type > p {
+    top: 8.5rem; /* Eerder: bottom: 8.5rem */
+    font-size: 1.1rem;
+    line-height: 1.4;
+    max-width: 70%;
+}
+
+/* AANGEPAST: H2 nu vanaf BOVEN gepositioneerd */
+main section:first-of-type > h2 {
+    top: 6rem;
+    font-size: var(--font-size-h2-mobile);
+    line-height: 1.1;
+    font-weight: 800;
+    text-transform: none; 
+    text-align: left;
+    margin-bottom: 0;
+}
+
+/* Bestsellers */
+section[aria-label="Best Sellers"] { 
+    max-width: none; 
+    padding: 2.5rem var(--side-padding); 
+    border-bottom: 1px solid var(--color-border);
+    background-color: transparent; 
+}
+
+section[aria-label="Best Sellers"] h2 {
+    text-align: left;
+    padding: 0; 
+    margin-bottom: 2rem; 
+}
+
+/* AANGEPAST: Toon 2 producten naast elkaar (grid) */
+section[aria-label="Best Sellers"] ul { 
+    list-style: none;
+    padding: 0;
+    display: grid; /* Gebruik grid voor de 2-koloms lay-out */
+    grid-template-columns: repeat(2, 1fr); /* Twee gelijke kolommen */
+    gap: 1.5rem; /* Spatie tussen de producten */
     margin-bottom: 2rem;
 }
 
-footer h2 {
-    font-size: 1rem;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    color: var(--primary-color);
+section[aria-label="Best Sellers"] article {
+    position: relative; 
+    border: none;
+    border-radius: 0; 
+    overflow: hidden; 
 }
 
-/* Footer Navigatie (Details/Summary) */
-footer nav details summary {
+section[aria-label="Best Sellers"] article::before {
+    content: "Save 40%"; 
+    position: absolute;
+    top: 0.5rem; /* Aangepaste top-positie voor kleiner product in grid */
+    right: 0.5rem; /* Aangepaste right-positie voor kleiner product in grid */
+    background-color: var(--color-badge-bg); 
+    color: var(--color-badge-text);
+    padding: 0.3rem 0.5rem; /* Kleinere padding voor badge */
+    border-radius: 4px; 
+    font-size: 0.55rem; 
     font-weight: 600;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--accent-color);
+    letter-spacing: 0.05em;
+    z-index: 10; 
+    white-space: nowrap; 
+}
+
+
+section[aria-label="Best Sellers"] article a {
+    display: block;
+    width: 100%; 
+    padding: 0; 
+}
+
+section[aria-label="Best Sellers"] article a img {
+    width: 100%; 
+    height: auto; 
+    max-height: none; 
+    object-fit: cover;
+    margin-bottom: 0; 
+    border-radius: 0; 
+}
+
+section[aria-label="Best Sellers"] article a h3 {
+    padding: 1rem 0 0.25rem 0rem; /* Aangepaste padding */
+    text-align: left;
+    font-size: 1rem; /* Aangepaste font-size */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+section[aria-label="Best Sellers"] article a p { 
+    padding: 0 0 1rem 0rem; /* Aangepaste padding */
+    text-align: left;
+    color: var(--color-text-primary);
+    font-size: 1rem; /* Aangepaste font-size */
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0; 
+}
+
+section[aria-label="Best Sellers"] article a p del {
+    color: var(--color-text-secondary);
+    font-weight: 400;
+    margin-right: 0.5rem;
+}
+
+section[aria-label="Best Sellers"] > a {
+    display: block; 
+    width: 100%; 
+    max-width: none; 
+    margin: 0 auto; 
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-primary);
+    padding: 1rem 2rem; 
+    border-radius: 4px;
+    font-weight: 700; 
+    letter-spacing: 0.1em;
+    transition: opacity var(--transition-speed);
+    text-align: center;
+}
+
+/* Footer */
+footer {
+    padding: 3rem var(--side-padding);
+    background-color: var(--color-bg-tertiary); 
+    color: var(--color-text-accent);
+    text-align: left; 
+    border-top: 1px solid var(--color-border);
+}
+footer > section, footer > nav {
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+/* Valuta en Betalingen */
+footer section[aria-label="Valuta en Betalingen"] {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem; 
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+footer section[aria-label="Valuta en Betalingen"] form {
+    margin-bottom: 1.5rem;
+}
+footer section[aria-label="Valuta en Betalingen"] form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.0rem;
+    font-weight: 700;
+    color: var(--color-text-secondary); 
+    text-transform: none;
+    letter-spacing: normal;
+}
+footer section[aria-label="Valuta en Betalingen"] form select {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary);
+    font-size: 1rem;
+    width: 100%;
+    max-width: 180px; 
+    cursor: pointer;
+}
+
+footer section[aria-label="Valuta en Betalingen"] figure figcaption {
+    margin-bottom: 0.75rem;
+    font-size: 1.0rem;
+    font-weight: 700;
+    color: var(--color-text-secondary); 
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+footer section[aria-label="Valuta en Betalingen"] figure ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: .7rem; 
+    width: 100%;
+    max-width: 500px; 
+    padding-bottom: 1rem;
+}
+
+footer section[aria-label="Valuta en Betalingen"] figure ul li {
+    line-height: 1;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    
+    border-radius: 4px;
+    padding: 0rem;
+    width: 75px; 
+    height: 40px; 
+    margin: 0; 
+}
+
+footer section[aria-label="Valuta en Betalingen"] figure ul li svg { 
+    width: 75px; 
+    height: auto; 
+    margin: 0; 
+}
+
+/* FOOTER NAVIGATIE */
+footer section:first-of-type h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+}
+
+footer section:nth-of-type(3) h2 {
+    font-size: 1.0rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    text-align: left;
+}
+
+footer nav details {
+    border-bottom: 1px solid var(--color-border);
+}
+footer nav details:last-of-type {
+    border-bottom: none;
+}
+footer nav summary {
+    font-size: 1.0rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem 0;
     cursor: pointer;
 }
 footer nav ul {
+    color: var(--color-text-accent);
     list-style: none;
-    padding: 0.5rem 0 1rem 0;
-}
-
-/* Footer Formulier */
-footer form {
+    padding: 0 0 1rem 0;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
+footer nav ul li {
+    color: var(--color-text-accent);
+}
+footer a {
+    color: var(--color-text-primary);
+    font-weight: 400;
+    text-transform: none; 
+    font-size: 0.95rem;
+}
+
+/* Nieuwsbrief Formulier */
+footer img{
+    display: block;
+    margin-bottom: 1rem;
+    width: 180px;
+    height: auto;
+}
+footer form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+}
+footer form label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
 footer form input[type="email"] {
-    padding: 0.5rem;
-    border: 1px solid var(--accent-color);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
 }
-footer form button {
-    padding: 0.75rem;
-    background-color: var(--primary-color);
-    color: white;
+footer form button[type="submit"] {
+    padding: 0.75rem 1rem;
     border: none;
-    cursor: pointer;
+    background-color: var(--color-text-accent);
+    color: var(--color-bg-primary);
+    border-radius: 4px;
+    font-size: 1rem;
     font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+footer form button[type="submit"]:hover {
+    background-color: var(--color-text-secondary);
 }
 
-/* Copyright */
-footer > section:last-of-type p {
-    text-align: center;
+/* Sociale Media Links */
+footer nav[aria-label="Social Media Links"] h3 {
+    font-size: 1.0rem;
+    font-weight: 700;
+    text-transform: none; 
+    letter-spacing: normal; 
+    margin-bottom: 0.75rem;
+    text-align: left;
+    color: var(--color-text-secondary); 
+}
+
+footer nav[aria-label="Social Media Links"] ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: flex-start; 
+    gap: 3.5rem; 
+    align-items: center; 
+    flex-direction: row;
+}
+
+footer nav[aria-label="Social Media Links"] ul a {
+    color: var(--color-text-accent); 
+    text-decoration: none;
+    line-height: 1; 
+    transition: color 0.2s ease-in-out; 
+    padding: 1rem;
+}
+
+footer nav[aria-label="Social Media Links"] ul a svg {
+    width: 38px; 
+    height: 38px;
+    fill: currentColor;
+    stroke: currentColor;
+    display: block;
+}
+
+
+/* Overige Footer Stijlen */
+footer section:last-of-type {
+    margin-bottom: 0;
+}
+footer section:last-of-type p {
     font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    text-align: center;
     margin-top: 2rem;
-}
-
-
-/* Desktop aanpassingen voor lay-out */
-@media (min-width: 768px) {
-    /* Hoofdgedeelte op desktop: filters naast producten */
-    main {
-        display: grid;
-        grid-template-columns: 200px 1fr; /* Filters 200px breed, de rest voor producten */
-        gap: 3rem;
-    }
-    
-    /* Filters aside verplaatsen */
-    aside {
-        order: 1; /* Zorg ervoor dat de aside voor de productsectie komt */
-        border-bottom: none;
-    }
-    
-    /* Product Lijst Sectie */
-    main > section:nth-of-type(2) {
-        order: 2;
-    }
-    
-    /* Collectie Titel (terug naar normale flow, over 2 kolommen) */
-    main > section:first-of-type {
-        grid-column: 1 / -1; /* Zorg dat de titel de volledige breedte inneemt */
-        text-align: left;
-    }
-    main > section:first-of-type p {
-        margin: 0;
-    }
-    
-    /* Product Grid op desktop: 3 of 4 kolommen */
-    main > section:nth-of-type(2) > ul {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-    }
-
-    /* Footer aanpassingen voor meerdere kolommen */
-    footer {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 2rem;
-    }
-    footer > section:nth-of-type(1) { /* TØTE Intro tekst */
-        grid-column: span 2; 
-    }
-    footer > section:last-of-type { /* Copyright */
-        grid-column: 1 / -1;
-    }
-    footer nav details {
-        border-bottom: none;
-    }
 }

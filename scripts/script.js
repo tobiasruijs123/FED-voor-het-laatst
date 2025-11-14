@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (logoZwart) logoZwart.style.display = 'none';
             
             // Hamburger Icon kleur (Wit)
-            if (menuToggle) menuToggle.style.color = secondaryText;
+            // if (menuToggle) menuToggle.style.color = secondaryText;
             
             // Navigatie Links kleur (Wit)
             headerLinks.forEach(link => {
@@ -289,23 +289,108 @@ document.addEventListener('DOMContentLoaded', () => {
         // Functie om de volgende afbeelding te tonen
         const showNextImage = () => {
             // Verberg de huidige afbeelding
-            images[currentIndex].style.opacity = 0;
+            // images[currentIndex].style.opacity = 0;
             
             // Bereken de index van de volgende afbeelding (terug naar 0 na de laatste)
             currentIndex = (currentIndex + 1) % images.length;
             
             // Toon de nieuwe (volgende) afbeelding
-            images[currentIndex].style.opacity = 1;
+            // images[currentIndex].style.opacity = 1;
         };
 
         // Bepaal een willekeurige vertraging voor deze specifieke tegel
         // Tussen 2000 ms (2 sec) en 4000 ms (4 sec)
         const randomDelay = Math.random() * 2000 + 2000;
 
+        // Start het automatisch roteren voor deze tegel
+        setInterval(showNextImage, randomDelay);
+
+
         // Zorg ervoor dat de eerste afbeelding na het laden van de DOM zeker zichtbaar is
         images[0].style.opacity = 1; 
 
-        // Start het automatisch roteren voor deze tegel
-        setInterval(showNextImage, randomDelay);
+        
     });
+});
+
+// ------------------------------------------
+    // 8. SCROLL-EIND GELUID ✨ NIEUW ✨
+    // ------------------------------------------
+    
+    // De drempelwaarde (in pixels) waarop we een 'hit' registreren
+    const SCROLL_THRESHOLD = 10; 
+
+  
+    // Zorg ervoor dat dit bestand bestaat: 'assets/audio/end-of-scroll.mp3'
+    const scrollEndSound = new Audio('assets/audio/ground-impact.mp3'); 
+    scrollEndSound.volume = 0.6; 
+
+    let isSoundPlayed = false; // Vlag om te voorkomen dat het geluid meerdere keren afspeelt
+
+    // Functie om te controleren of de onderkant van de pagina is bereikt
+    const checkScrollEnd = () => {
+        // Hoogte van het document in pixels
+        const totalHeight = document.documentElement.scrollHeight;
+        // Hoogte van het zichtbare venster
+        const visibleHeight = window.innerHeight;
+        // De huidige verticale scrollpositie
+        const currentScroll = window.scrollY;
+
+        // Bereken de afstand tot de onderkant:
+        const distanceToBottom = totalHeight - visibleHeight - currentScroll;
+
+        // Logica: Als de afstand tot de bodem kleiner is dan de drempelwaarde 
+        // EN het geluid nog niet is afgespeeld.
+        if (distanceToBottom <= SCROLL_THRESHOLD && !isSoundPlayed) {
+            
+            scrollEndSound.play().then(() => {
+                isSoundPlayed = true;
+            }).catch(error => {
+                console.warn("Scroll-End Audio afspelen mislukt, browser beperking:", error.name);
+            });
+            
+        } 
+        
+        // Reset de vlag als de gebruiker weer omhoog scrollt (buiten de drempel)
+        if (distanceToBottom > SCROLL_THRESHOLD && isSoundPlayed) {
+            isSoundPlayed = false;
+        }
+    };
+    
+    // Performance optimalisatie: Voorkom dat de check te vaak wordt uitgevoerd
+    let isThrottled = false;
+    window.addEventListener('scroll', () => {
+        if (!isThrottled) {
+            checkScrollEnd();
+            isThrottled = true;
+            setTimeout(() => {
+                isThrottled = false;
+            }, 100); // Check maximaal 10 keer per seconde
+        }
+    });
+
+    // ------------------------------------------
+// X. SCROLL NAAR BOVEN BIJ ESCAPE-TOETS
+// ------------------------------------------
+
+document.addEventListener('keydown', (event) => {
+    // 1. Controleer of de ingedrukte toets de 'Escape' toets is
+    if (event.key === 'Escape') {
+        
+        event.preventDefault(); 
+        
+        // 2. Scroll de pagina naar de bovenkant
+        window.scrollTo({
+            top: 0,              // Scroll naar de 0-positie (de top van de pagina)
+            behavior: 'smooth'   // Maak de scroll-beweging vloeiend
+        });
+        
+        // Focus terug op de header voor toegankelijkheid
+        const header = document.querySelector('header');
+        if (header) {
+            header.setAttribute('tabindex', '-1'); // Maak de header focusseerbaar
+            header.focus();                        // Zet de focus op de header
+            header.removeAttribute('tabindex');    // Verwijder tabindex weer
+        }
+    }
 });

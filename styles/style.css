@@ -2,8 +2,10 @@
 /* 1. GLOBALE STIJLEN & KLEUR VARIABELEN (STANDAARD IS LIGHT MODE) */
 /* ---------------------------------------------------- */
 :root {
+color-scheme:light dark;
+
     /* Basistekst & Achtergrond */
-    --color-text-primary: #1a1a1a;        /* Standaard zwarte tekst */
+    --color-text-primary: light-dark(#1a1a1a, #f2f2f2);        /* Standaard zwarte tekst */
     --color-text-secondary: #666;         /* Grijs voor subtiele tekst */
     --color-text-accent: #205f71;         /* Kleur voor speciale links (derde tekstkleur) */
     --color-bg-primary: #f7f7f7;          /* Standaard lichtgrijze achtergrond van de pagina */
@@ -34,6 +36,9 @@
     --font-size-lg: 1.25rem;     
     --font-size-h2-mobile: 1.725rem;
     --font-size-h2-desktop: 2.5rem;
+
+	--menu-button-color:light-dark(white, white);
+	--menu-button-color-open:light-dark(black, white);
 }
     
 /* ---------------------------------------------------- */
@@ -41,7 +46,8 @@
 /* ---------------------------------------------------- */
 @media (prefers-color-scheme: dark) {
     :root {
-        --color-text-primary: #f2f2f2;        
+        /* --color-text-primary: #f2f2f2;     */
+		    
         --color-text-secondary: #aaaaaa;      
         --color-text-accent: #86c4d7;         
         --color-bg-primary: #1c1c1c;          
@@ -178,6 +184,7 @@ header {
     font-size: 0; 
     line-height: 1;
     display: block; 
+	color:var(--menu-button-color);
 }
 [aria-controls="main-navigation"][aria-expanded="false"]::before,
 [aria-controls="main-navigation"][aria-expanded="false"]::after {
@@ -217,10 +224,11 @@ header {
 }
 
 [aria-controls="main-navigation"][aria-expanded="true"]::after {
-    content: 'Menu ✕'; 
+    content: '✕'; 
     font-size: 1.5rem; 
     line-height: 1;
-    color: currentColor; 
+    /* color: currentColor;  */
+	color:var(--menu-button-color-open);
     padding: 0;
     font-weight: 300; 
     position: relative; 
