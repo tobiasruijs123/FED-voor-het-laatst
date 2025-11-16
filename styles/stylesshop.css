@@ -1,99 +1,24 @@
 /* ---------------------------------------------------- */
-/* 1. GLOBALE STIJLEN & KLEUR VARIABELEN (STANDAARD IS LIGHT MODE) */
+/* 1. ACCESSIBILITY: PREFERS-REDUCED-MOTION */
 /* ---------------------------------------------------- */
-:root {
-color-scheme:light dark;
-
-    /* Basistekst & Achtergrond */
-    --color-text-primary: light-dark(#1a1a1a, #f2f2f2);        /* Standaard zwarte tekst */
-    --color-text-secondary: #666;         /* Grijs voor subtiele tekst */
-    --color-text-accent: #205f71;         /* Kleur voor speciale links (derde tekstkleur) */
-    --color-bg-primary: #f7f7f7;          /* Standaard lichtgrijze achtergrond van de pagina */
-    --color-bg-secondary: #ffffff;        /* Wit (gebruikt voor header scrolled/mobile menu) */
-    --color-bg-tertiary: #efefef;         /* Lichtere achtergrond (gebruikt voor footer) */
-    
-    /* Randen & Accenten */
-    --color-border: #cccccc;              /* Grijze randen */
-    --color-accent: #cccccc;              /* Grijze accenten (buttons hover, randen) */
-    --color-link-default: var(--color-text-primary);
-    --color-link-hover: var(--color-text-secondary);
-    
-    /* Speciale kleuren */
-    --color-badge-bg: #024053;
-    --color-badge-text: white;
-    
-    /* Hero/Button kleuren */
-    --color-hero-button-bg: white;
-    --color-hero-button-text: var(--color-text-primary);
-
-    /* Overige Stijlen */
-    --transition-speed: 0.3s;
-    --nav-bar-height: 60px;
-    --side-padding: 1.5rem; 
-    --font-family-base: 'Instrument sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-size-base: 1rem;       
-    --font-size-sm: 0.875rem;    
-    --font-size-lg: 1.25rem;     
-    --font-size-h2-mobile: 1.725rem;
-    --font-size-h2-desktop: 2.5rem;
-
-    --menu-button-color:light-dark(white, white);
-    --menu-button-color-open:light-dark(black, white);
-}
-    
-/* ---------------------------------------------------- */
-/* 2. DARK MODE OVERHEERSING */
-/* ---------------------------------------------------- */
-@media (prefers-color-scheme: dark) {
-    :root {
-        /* --color-text-primary: #f2f2f2;     */
-            
-        --color-text-secondary: #aaaaaa;      
-        --color-text-accent: #86c4d7;         
-        --color-bg-primary: #1c1c1c;          
-        --color-bg-secondary: #000000;        
-        --color-bg-tertiary: #2a2a2a;         
-        --color-border: #333333;              
-        --color-accent: #444444;              
-        --color-badge-bg: #3f7b90;
-        --color-badge-text: white;
-        --color-hero-button-bg: var(--color-bg-primary);
-        --color-hero-button-text: var(--color-text-primary);
-    }
-    
-    /* Standaard Dark Mode header (niet-gescrolld) moet wit zijn op zwart */
-    header {
-        color: var(--color-text-primary); 
-    }
-
-    /* Zorgt ervoor dat tekst in het ZWARTE mobiele menu WIT (primary text) is */
-    header.menu-open nav ul li a {
-        color: var(--color-text-primary) !important; 
-    }
-    
-    /* Zorg dat de hamburger/kruisje knop WIT is in de standaard Dark Mode toestand */
-    [aria-controls="main-navigation"] {
-        color: var(--color-text-primary) !important; 
-    }
-}
-
-/* ---------------------------------------------------- */
-/* 3. ACCESSIBILITY: PREFERS-REDUCED-MOTION */
-/* ---------------------------------------------------- */
+/* Schakelt alle vloeiende overgangen en animaties uit voor gebruikers met een voorkeur voor minder beweging */
 @media (prefers-reduced-motion: reduce) {
     
     *,
     *::before,
     *::after {
+        /* Reset animatie- en overgangsduur naar bijna nul */
         transition-duration: 0.001s !important;
         transition-property: all !important;
         animation-duration: 0.001s !important;
         animation-iteration-count: 1 !important;
+        /* Schakel vloeiend scrollen uit */
         scroll-behavior: auto !important; 
         animation: none !important;
         transition: none !important; 
     }
     
+    /* Specifieke elementen zonder overgang/transformatie */
     header nav ul, 
     header nav li a[aria-haspopup="true"]::after,
     header nav ul li ul {
@@ -101,12 +26,15 @@ color-scheme:light dark;
         transform: none !important;
     }
 
+    /* *Specifieke regels voor andere componenten die animaties bevatten (die niet in dit blok stonden, maar hier ter referentie) zouden hier toegevoegd moeten worden.* */
+
 }
     
 /* ---------------------------------------------------- */
-/* 4. BASE STYLES & HEADER (MOBILE FIRST) */
+/* 2. BASE STYLES & HEADER (MOBILE FIRST) */
 /* ---------------------------------------------------- */
 
+/* Reset Box Model */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -114,14 +42,17 @@ color-scheme:light dark;
     line-height: 1.5;
 }
 
+/* Global Body Styling */
 html, body {
     font-family: var(--font-family-base);
     font-size: var(--font-size-base); 
     color: var(--color-text-primary);
     background-color: var(--color-bg-primary); 
+    /* Voorkomt horizontale scrollbalken door lay-outverschuivingen */
     overflow-x: hidden; 
 }
 
+/* Link Styling */
 a {
     text-decoration: none;
     color: var(--color-link-default);
@@ -132,18 +63,21 @@ a:hover {
     color: var(--color-link-hover);
 }
 
-/* Header Container */
+/* Header Container (Vaste Positie) */
 header {
     position: fixed;
     top: 0; 
     left: 0;
     width: 100%;
+    /* Standaard niet-transparant op mobiel */
     background-color: var(--color-bg-secondary); 
     z-index: 15;
     padding: 0; 
-    color: white; 
+    /* Standaard donkere tekstkleur, maar wordt overschreven door de CSS variabele indien nodig */
+    color: var(--color-text-primary); 
     border-bottom: none; 
     
+    /* Grid Lay-out voor: [Menu Knop] [Logo] [Winkelwagen] */
     display: grid; 
     grid-template-columns: 1fr auto 1fr; 
     align-items: center;
@@ -151,7 +85,7 @@ header {
     transition: background-color var(--transition-speed) ease-in-out, border-bottom var(--transition-speed), color var(--transition-speed), transform 0.4s ease;
 }
 
-/* Mobile Menu Button (Hamburger) */
+/* Mobile Menu Button (Hamburger/Kruisje) */
 [aria-controls="main-navigation"] {
     display: flex; 
     padding: 1rem var(--side-padding); 
@@ -164,11 +98,11 @@ header {
     align-items: center;
     justify-content: center;
     
-    /* Standaard in Light Mode is de knop ZWART op witte achtergrond (via JS wordt dit WIT bij scroll 0) */
+    /* Gebruikt de fallback menu-knop kleur (meestal zwart) */
     color: var(--color-text-primary); 
 }
 
-/* Hamburger Icon (Default State: Hamburger) */
+/* Hamburger Icon State (Standaard Gesloten) */
 [aria-controls="main-navigation"][aria-expanded="false"] {
     position: relative; 
     width: 2rem; 
@@ -186,6 +120,7 @@ header {
     width: 1.4rem; 
     height: 1.5px; 
     position: absolute; 
+    /* Gebruikt de 'color' van de knop (currentColor) */
     background-color: currentColor; 
     transform: none; 
 }
@@ -199,7 +134,7 @@ header {
     width: 1.0rem; 
 }
 
-/* KRUISJE STIJL (Menu Open: X met Menu tekst) */
+/* KRUISJE STIJL (Menu Open) */
 [aria-controls="main-navigation"][aria-expanded="true"] {
     position: relative; 
     display: flex; 
@@ -220,8 +155,7 @@ header {
     content: '✕'; 
     font-size: 1.5rem; 
     line-height: 1;
-    /* color: currentColor;  */
-    color:var(--menu-button-color-open);
+    color:var(--menu-button-color-open); /* Kleur voor het kruisje */
     padding: 0;
     font-weight: 300; 
     position: relative; 
@@ -257,7 +191,7 @@ header h1 img {
     filter: none; 
 }
 
-/* Cart Section Styling */
+/* Winkelwagen Sectie */
 header svg {
     color: currentColor; 
 }
@@ -267,11 +201,11 @@ header section:nth-of-type(1) {
     align-items: center;
     justify-content: flex-end;
     z-index: 25;
-    color: currentColor;
+    color: currentColor; /* Erft de kleur van de header */
     justify-self: end; 
 }
 header section:nth-of-type(1) p {
-    display: none;
+    display: none; /* Verbergt de tekst op mobiel */
 }
 header section:nth-of-type(1) a {
     font-size: 0; 
@@ -284,7 +218,7 @@ header section:nth-of-type(1) a {
     justify-content: center;
 }
 
-/* Mobile Menu Container (Standaard verborgen op mobiel) */
+/* Mobile Menu Container (Navigatie) */
 header nav ul {
     list-style: none;
     display: flex;
@@ -297,6 +231,7 @@ header nav ul {
     width: 100%; 
     height: 100vh; 
     
+    /* Begint onder de vaste header */
     padding-top: calc(var(--nav-bar-height) + 1rem); 
     padding-right: 0; 
     padding-bottom: 1.5rem; 
@@ -304,7 +239,7 @@ header nav ul {
     
     background-color: var(--color-bg-secondary);
     
-    /* Forceert gesloten staat (links van het scherm) */
+    /* Standaard gesloten (buiten beeld) */
     transform: translateX(-100%) !important; 
     
     transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1); 
@@ -317,10 +252,9 @@ header nav ul {
     color: var(--color-text-primary); 
 }
 
-/* Standaard ARIA open state */
+/* Menu Open State */
 header nav:has([aria-expanded="true"]) ul,
 header.menu-open nav ul {
-    /* Opent het menu wanneer de knop is ingedrukt of de klasse is toegevoegd */
     transform: translateX(0) !important;
 }
 
@@ -345,7 +279,7 @@ header nav li a {
 }
 
 
-/* Dropdown Toggle styling (The SHOP link) */
+/* Dropdown Toggle styling (bv. de SHOP link) */
 header nav li a[aria-haspopup="true"] {
     display: flex;
     justify-content: space-between;
@@ -353,7 +287,7 @@ header nav li a[aria-haspopup="true"] {
     width: 100%;
 }
 
-/* Arrow for SHOP link */
+/* Pijl voor dropdown */
 header nav li a[aria-haspopup="true"]::after {
     content: '▾';
     font-size: 1.5rem;
@@ -361,12 +295,12 @@ header nav li a[aria-haspopup="true"]::after {
     transition: transform 0.4s; 
     font-weight: 400;
 }
-/* Pijlrotatie wanneer dropdown open is (door JS/aria-expanded) */
+/* Pijlrotatie wanneer dropdown open is */
 header nav li a[aria-haspopup="true"][aria-expanded="true"]::after {
     transform: rotate(180deg);
 }
 
-/* Dropdown Menu (Nested list) specific styling */
+/* Dropdown Menu (Geneste lijst) */
 header nav ul li ul { 
     list-style: none;
     position: static; 
@@ -375,6 +309,7 @@ header nav ul li ul {
     
     padding: 0;
     margin-top: 0;
+    /* Gebruikt max-height om een geanimeerde open/dicht effect te creëren */
     max-height: 0; 
     overflow: hidden;
     transition: max-height 0.4s ease-in-out;
@@ -388,6 +323,7 @@ header nav ul li ul {
 
 /* Dropdown sub-link styling */
 header nav ul li ul li a {
+    /* Inspringing voor sublinks */
     padding: 0.75rem var(--side-padding) 0.75rem calc(var(--side-padding) + 1.5rem); 
     font-weight: 400;
     letter-spacing: 0.05em;
@@ -398,6 +334,10 @@ header nav ul li ul li a {
 header nav ul li ul li {
     border-bottom: none;
 }
+
+/* ---------------------------------------------------- */
+/* 3. MAIN CONTENT SECTIONS (MOBILE FIRST) */
+/* ---------------------------------------------------- */
 
 /* Hero Section */
 main section:first-of-type {
@@ -419,7 +359,7 @@ main section:first-of-type img {
     margin-bottom: 0;
 }
 
-/* AANGEPAST: Overlay van BOVENAF */
+/* AANGEPAST: Overlay van BOVENAF voor leesbaarheid van Hero Tekst */
 main section:first-of-type::after {
     content: '';
     position: absolute;
@@ -427,10 +367,12 @@ main section:first-of-type::after {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%); /* Van boven naar beneden */
+    /* Veranderd van 'to top' naar 'to bottom' */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%); 
     z-index: 5; 
 }
 
+/* Hero Tekst en Knop Positionering (algemeen) */
 main section:first-of-type > h2, 
 main section:first-of-type > p, 
 main section:first-of-type > a {
@@ -444,9 +386,28 @@ main section:first-of-type > a {
     max-width: 600px;
 }
 
-/* AANGEPAST: Knop nu vanaf BOVEN gepositioneerd */
+/* AANGEPAST: H2 nu vanaf BOVEN gepositioneerd */
+main section:first-of-type > h2 {
+    top: 6rem; /* Top-gebaseerde positie */
+    font-size: var(--font-size-h2-mobile);
+    line-height: 1.1;
+    font-weight: 800;
+    text-transform: none; 
+    text-align: left;
+    margin-bottom: 0;
+}
+
+/* AANGEPAST: Paragraaf nu vanaf BOVEN gepositioneerd */
+main section:first-of-type > p {
+    top: 8.5rem; /* Top-gebaseerde positie */
+    font-size: 1.1rem;
+    line-height: 1.4;
+    max-width: 70%;
+}
+
+/* Knop blijft onderaan (geen wijziging ten opzichte van de vorige bottom-positie) */
 main section:first-of-type > a {
-    top: 13rem; /* Eerder: bottom: 4rem */
+    bottom: 4rem; 
     display: inline-block; 
     width: auto;
     min-width: 200px;
@@ -464,26 +425,8 @@ main section:first-of-type > a:hover {
     background-color: var(--color-accent); 
 }
 
-/* AANGEPAST: Paragraaf nu vanaf BOVEN gepositioneerd */
-main section:first-of-type > p {
-    top: 8.5rem; /* Eerder: bottom: 8.5rem */
-    font-size: 1.1rem;
-    line-height: 1.4;
-    max-width: 70%;
-}
 
-/* AANGEPAST: H2 nu vanaf BOVEN gepositioneerd */
-main section:first-of-type > h2 {
-    top: 6rem;
-    font-size: var(--font-size-h2-mobile);
-    line-height: 1.1;
-    font-weight: 800;
-    text-transform: none; 
-    text-align: left;
-    margin-bottom: 0;
-}
-
-/* Bestsellers */
+/* Bestsellers Sectie */
 section[aria-label="Best Sellers"] { 
     max-width: none; 
     padding: 2.5rem var(--side-padding); 
@@ -501,12 +444,13 @@ section[aria-label="Best Sellers"] h2 {
 section[aria-label="Best Sellers"] ul { 
     list-style: none;
     padding: 0;
-    display: grid; /* Gebruik grid voor de 2-koloms lay-out */
+    display: grid; 
     grid-template-columns: repeat(2, 1fr); /* Twee gelijke kolommen */
-    gap: 1.5rem; /* Spatie tussen de producten */
-    margin-bottom: 2rem;
+    gap: 1.5rem; 
+    margin-bottom: 0; 
 }
 
+/* Product Kaart */
 section[aria-label="Best Sellers"] article {
     position: relative; 
     border: none;
@@ -514,16 +458,17 @@ section[aria-label="Best Sellers"] article {
     overflow: hidden; 
 }
 
+/* Badge (bv. "Save 40%") - AANGEPASTE POSITIE/GROOTTE VOOR GRID */
 section[aria-label="Best Sellers"] article::before {
     content: "Save 40%"; 
     position: absolute;
-    top: 0.5rem; /* Aangepaste top-positie voor kleiner product in grid */
-    right: 0.5rem; /* Aangepaste right-positie voor kleiner product in grid */
+    top: 0.5rem; 
+    right: 0.5rem; 
     background-color: var(--color-badge-bg); 
     color: var(--color-badge-text);
-    padding: 0.3rem 0.5rem; /* Kleinere padding voor badge */
+    padding: 0.3rem 0.5rem; /* Kleinere padding */
     border-radius: 4px; 
-    font-size: 0.55rem; 
+    font-size: 0.55rem; /* Kleinere font-size */
     font-weight: 600;
     letter-spacing: 0.05em;
     z-index: 10; 
@@ -547,7 +492,7 @@ section[aria-label="Best Sellers"] article a img {
 }
 
 section[aria-label="Best Sellers"] article a h3 {
-    padding: 1rem 0 0.25rem 0rem; /* Aangepaste padding */
+    padding: 1rem 0 0.25rem 0rem; 
     text-align: left;
     font-size: 1rem; /* Aangepaste font-size */
     font-weight: 600;
@@ -556,7 +501,7 @@ section[aria-label="Best Sellers"] article a h3 {
 }
 
 section[aria-label="Best Sellers"] article a p { 
-    padding: 0 0 1rem 0rem; /* Aangepaste padding */
+    padding: 0 0 1rem 0rem;
     text-align: left;
     color: var(--color-text-primary);
     font-size: 1rem; /* Aangepaste font-size */
@@ -565,17 +510,19 @@ section[aria-label="Best Sellers"] article a p {
     margin-bottom: 0; 
 }
 
+/* Oude prijs */
 section[aria-label="Best Sellers"] article a p del {
     color: var(--color-text-secondary);
     font-weight: 400;
     margin-right: 0.5rem;
 }
 
+/* "Bekijk alles" knop (staat hier niet in de lijst, maar zou na de UL staan) */
 section[aria-label="Best Sellers"] > a {
     display: block; 
     width: 100%; 
     max-width: none; 
-    margin: 0 auto; 
+    margin: 2.5rem auto 0 auto; 
     background-color: var(--color-text-primary);
     color: var(--color-bg-primary);
     padding: 1rem 2rem; 
@@ -586,7 +533,9 @@ section[aria-label="Best Sellers"] > a {
     text-align: center;
 }
 
-/* Footer */
+/* ---------------------------------------------------- */
+/* 4. FOOTER STYLES (MOBILE FIRST) */
+/* ---------------------------------------------------- */
 footer {
     padding: 3rem var(--side-padding);
     background-color: var(--color-bg-tertiary); 
@@ -599,7 +548,7 @@ footer > section, footer > nav {
     margin-bottom: 2rem;
 }
 
-/* Valuta en Betalingen */
+/* Valuta en Betalingen Sectie */
 footer section[aria-label="Valuta en Betalingen"] {
     display: flex;
     flex-direction: column;
@@ -608,6 +557,7 @@ footer section[aria-label="Valuta en Betalingen"] {
     width: 100%;
 }
 
+/* Valuta Formulier */
 footer section[aria-label="Valuta en Betalingen"] form {
     margin-bottom: 1.5rem;
 }
@@ -630,6 +580,7 @@ footer section[aria-label="Valuta en Betalingen"] form select {
     cursor: pointer;
 }
 
+/* Betaalmethoden Figuren */
 footer section[aria-label="Valuta en Betalingen"] figure figcaption {
     margin-bottom: 0.75rem;
     font-size: 1.0rem;
@@ -642,6 +593,7 @@ footer section[aria-label="Valuta en Betalingen"] figure figcaption {
 footer section[aria-label="Valuta en Betalingen"] figure ul {
     list-style: none;
     padding: 0;
+    /* Grid voor 4 betaaliconen per rij */
     display: grid;
     grid-template-columns: repeat(4, 1fr); 
     gap: .7rem; 
@@ -669,25 +621,7 @@ footer section[aria-label="Valuta en Betalingen"] figure ul li svg {
     margin: 0; 
 }
 
-/* FOOTER NAVIGATIE */
-footer section:first-of-type h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    text-align: left;
-}
-
-footer section:nth-of-type(3) h2 {
-    font-size: 1.0rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
-    text-align: left;
-}
-
+/* Footer Navigatie (gebruikt <details> voor accordion op mobiel) */
 footer nav details {
     border-bottom: 1px solid var(--color-border);
 }
@@ -734,6 +668,7 @@ footer form {
     padding-top: 1rem;
 }
 footer form label {
+    /* Visueel verbergen van het label (voor screenreaders) */
     position: absolute;
     width: 1px;
     height: 1px;
@@ -795,16 +730,27 @@ footer nav[aria-label="Social Media Links"] ul a {
     padding: 1rem;
 }
 
+/* Surface plane:SVG Icons stylen in CSS */
+
+/* Standaard Stijl van het SVG Icoon */
 footer nav[aria-label="Social Media Links"] ul a svg {
     width: 38px; 
     height: 38px;
     fill: currentColor;
     stroke: currentColor;
     display: block;
+    transition: transform 0.3s ease-in-out, fill 0.3s ease-in-out, stroke 0.3s ease-in-out;
 }
 
-
-/* Overige Footer Stijlen */
+footer nav[aria-label="Social Media Links"] ul a:hover svg {
+        transform: scale(1.2); 
+    
+    /* Kleurverandering */
+    fill: var(--color-accent); 
+    stroke: var(--color-accent); 
+    
+}
+/* Copyright en Overige Footer Stijlen */
 footer section:last-of-type {
     margin-bottom: 0;
 }
