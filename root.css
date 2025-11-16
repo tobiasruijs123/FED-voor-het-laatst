@@ -1,0 +1,76 @@
+/* ---------------------------------------------------- */
+/* 1. GLOBALE STIJLEN & KLEUR VARIABELEN (STANDAARD IS LIGHT MODE) */
+/* ---------------------------------------------------- */
+:root {
+color-scheme:light dark;
+
+    /* Basistekst & Achtergrond */
+    --color-text-primary: light-dark(#1a1a1a, #f2f2f2);
+    --color-text-secondary: #666;
+    --color-text-accent: #205f71;
+    --color-bg-primary: #f7f7f7;
+    --color-bg-secondary: #ffffff;
+    --color-bg-tertiary: #efefef;
+    
+    /* Randen & Accenten */
+    --color-border: #cccccc;
+    --color-accent: #cccccc;
+    --color-link-default: var(--color-text-primary);
+    --color-link-hover: var(--color-text-secondary);
+    
+    /* Speciale kleuren */
+    --color-badge-bg: #024053;
+    --color-badge-text: white;
+    
+    /* Hero/Button kleuren */
+    --color-hero-button-bg: white;
+    --color-hero-button-text: var(--color-text-primary);
+
+    /* Overige Stijlen */
+    --transition-speed: 0.3s;
+    --nav-bar-height: 60px;
+    --side-padding: 1.5rem; 
+    --font-family-base: 'Instrument sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-size-base: 1rem;       
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.25rem;
+    --font-size-h2-mobile: 1.725rem;
+    --font-size-h2-desktop: 2.5rem;
+
+    --menu-button-color:light-dark(white, white);
+    --menu-button-color-open:light-dark(black, white);
+}
+    
+/* ---------------------------------------------------- */
+/* 2. DARK MODE OVERHEERSING */
+/* ---------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text-secondary: #aaaaaa;      
+        --color-text-accent: #86c4d7;         
+        --color-bg-primary: #1c1c1c;          
+        --color-bg-secondary: #000000;        
+        --color-bg-tertiary: #2a2a2a;         
+        --color-border: #333333;              
+        --color-accent: #444444;              
+        --color-badge-bg: #3f7b90;
+        --color-badge-text: white;
+        --color-hero-button-bg: var(--color-bg-primary);
+        --color-hero-button-text: var(--color-text-primary);
+    }
+    
+    /* Standaard Dark Mode header (niet-gescrolld) moet wit zijn op zwart */
+    header {
+        color: var(--color-text-primary); 
+    }
+
+    /* Zorgt ervoor dat tekst in het ZWARTE mobiele menu WIT (primary text) is */
+    header.menu-open nav ul li a {
+        color: var(--color-text-primary) !important; 
+    }
+    
+    /* Zorg dat de hamburger/kruisje knop WIT is in de standaard Dark Mode toestand */
+    [aria-controls="main-navigation"] {
+        color: var(--color-text-primary) !important; 
+    }
+}
