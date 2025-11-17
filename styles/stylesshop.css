@@ -73,7 +73,7 @@ header {
     background-color: var(--color-bg-secondary); 
     z-index: 15;
     padding: 0; 
-    /* Standaard donkere tekstkleur, maar wordt overschreven door de CSS variabele indien nodig */
+    /* Standaard donkere tekstkleur,wordt overschreven door CSS indien nodig */
     color: var(--color-text-primary); 
     border-bottom: none; 
     
@@ -440,14 +440,33 @@ section[aria-label="Best Sellers"] h2 {
     margin-bottom: 2rem; 
 }
 
-/* AANGEPAST: Toon 2 producten naast elkaar (grid) */
+/* Toon 2 producten naast elkaar (grid) */
 section[aria-label="Best Sellers"] ul { 
     list-style: none;
     padding: 0;
     display: grid; 
-    grid-template-columns: repeat(2, 1fr); /* Twee gelijke kolommen */
+    grid-template-columns: repeat(2, minmax(150px, 1fr)); 
     gap: 1.5rem; 
     margin-bottom: 0; 
+
+
+}
+
+
+@media (min-width: 800px) { 
+  section[aria-label="Best Sellers"] ul {
+    grid-template-columns: repeat(3, minmax(150px, 1fr)); 
+   
+  }
+
+  
+}
+@media (min-width: 1000px) { 
+  section[aria-label="Best Sellers"] ul {
+    grid-template-columns: repeat(4, minmax(150px, 1fr)); 
+
+  }
+
 }
 
 /* Product Kaart */
@@ -458,7 +477,7 @@ section[aria-label="Best Sellers"] article {
     overflow: hidden; 
 }
 
-/* Badge (bv. "Save 40%") - AANGEPASTE POSITIE/GROOTTE VOOR GRID */
+/* Badge */
 section[aria-label="Best Sellers"] article::before {
     content: "Save 40%"; 
     position: absolute;
@@ -489,7 +508,13 @@ section[aria-label="Best Sellers"] article a img {
     object-fit: cover;
     margin-bottom: 0; 
     border-radius: 0; 
+    transition: transform 0.5s ease-in-out;
+
+   
 }
+section[aria-label="Best Sellers"] article  a:hover img {
+        transform: scale(1.1); }
+
 
 section[aria-label="Best Sellers"] article a h3 {
     padding: 1rem 0 0.25rem 0rem; 
